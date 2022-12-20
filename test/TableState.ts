@@ -1,10 +1,11 @@
-// import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-// import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-// import { expect } from "chai";
-// import { ethers } from "hardhat";
+/*
+import { expect } from "chai";
+import { ethers, network } from "hardhat";
 
-// describe("TableState", function () {
-//   describe("Deployment", function () {
-//     it("", async function () {});
-//   });
-// });
+describe("dynNFT", function () {
+  // Implement tests here
+  it("Should run tests", async function () {
+    // Deploy the dynNFT contract
+  });
+});
+*/
