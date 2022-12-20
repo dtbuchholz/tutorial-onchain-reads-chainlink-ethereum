@@ -1,4 +1,4 @@
-import { network, run, contractConfig } from "hardhat";
+import { ethers, network, run, deployment } from "hardhat";
 require("@nomiclabs/hardhat-etherscan");
 
 async function main() {
@@ -6,8 +6,12 @@ async function main() {
   // Verify rigs
   try {
     await run("verify:verify", {
-      address: contractConfig.contractAddress,
-      constructorArugments: [],
+      address: deployment.contractAddress,
+      constructorArugments: [
+        deployment.linkTokenAddress,
+        deployment.oracleAddress,
+        ethers.utils.toUtf8Bytes(deployment.jobId),
+      ],
     });
   } catch (err: any) {
     // Check if the error is via hardhat or etherscan where already verified contracts throw a halting error
