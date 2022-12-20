@@ -8,7 +8,7 @@ export const config: HardhatUserConfig = {
   solidity: "0.8.17",
   etherscan: {
     apiKey: {
-      goerli: process.env.ETHERSCAN_API_KEY || "",
+      arbitrumGoerli: process.env.ARBISCAN_API_KEY || "",
     },
   },
   networks: {

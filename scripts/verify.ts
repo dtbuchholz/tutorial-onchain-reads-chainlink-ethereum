@@ -7,7 +7,7 @@ async function main() {
   try {
     await run("verify:verify", {
       address: deployment.contractAddress,
-      constructorArugments: [
+      constructorArguments: [
         deployment.linkTokenAddress,
         deployment.oracleAddress,
         ethers.utils.toUtf8Bytes(deployment.jobId),
