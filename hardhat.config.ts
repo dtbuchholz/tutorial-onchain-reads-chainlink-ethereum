@@ -8,26 +8,26 @@ export const config: HardhatUserConfig = {
   solidity: "0.8.17",
   etherscan: {
     apiKey: {
-      arbitrumGoerli: process.env.ARBISCAN_API_KEY || "",
+      sepolia: process.env.ETHERSCAN_API_KEY || "",
     },
   },
   networks: {
-    "arbitrum-goerli": {
-      url: `https://arb-goerli.g.alchemy.com/v2/${
-        process.env.ARBITRUM_GOERLI_API_KEY ?? ""
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${
+        process.env.ETHEREUM_SEPOLIA_API_KEY ?? ""
       }`,
       accounts:
-        process.env.ARBITRUM_GOERLI_PRIVATE_KEY !== undefined
-          ? [process.env.ARBITRUM_GOERLI_PRIVATE_KEY]
+        process.env.ETHEREUM_SEPOLIA_PRIVATE_KEY !== undefined
+          ? [process.env.ETHEREUM_SEPOLIA_PRIVATE_KEY]
           : [],
     },
   },
   config: {
     args: {
-      contractAddress: "0x383f1BAA132Cea7CFfb2780f2935deD0f8e7E654", // IMPORTANT: Update this with each deployment
-      linkTokenAddress: "0xd14838A68E8AFBAdE5efb411d5871ea0011AFd28", // Arbitrum Goerli LINK token
-      oracleAddress: "0x2362A262148518Ce69600Cc5a6032aC8391233f5", // Translucent (node operator) address -- see: https://translucent.link/products/get-uint256)
-      jobId: "7599d3c8f31e4ce78ad2b790cbcfc673", // Translucent job ID for single word uint256 request
+      contractAddress: "0x22352F3c7765D389f2491108942de357f799Ec4F", // IMPORTANT: Update this with each deployment
+      linkTokenAddress: "0x779877A7B0D9E8603169DdbD7836e478b4624789", // Ethereum Sepolia LINK token
+      oracleAddress: "0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD", // Any API node operator address
+      jobId: "ca98366cc7314957b8c012c72f05aeeb",
     },
   },
 };

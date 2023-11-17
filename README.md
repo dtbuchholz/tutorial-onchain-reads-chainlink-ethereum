@@ -2,9 +2,20 @@
 
 Onchain table state using Chainlink's [Any API](https://docs.chain.link/getting-started/advanced-tutorial/) and Ethereum (Sepolia).
 
-# Background
+## Table of Contents
 
-## Overview
+- [Background](#background)
+  - [Overview](#overview)
+  - [Project Structure](#project-structure)
+- [Usage](#usage)
+  - [Setup](#setup)
+  - [Deployment](#deployment)
+  - [Tasks](#tasks)
+- [Output](#output)
+
+## Background
+
+### Overview
 
 This project demonstrates how to query offchain Tableland table state and get data back onchain. It leverages Chainlink's Oracle network to fulfill onchain requests at the Tableland gateway and write the data back to the smart contract, allowing for onchain reads to take place. Ethereum's Sepolia testnet is also used to demonstrate how to use Chainlink in a testnet environment.
 
@@ -12,7 +23,7 @@ This example hard codes the Chainlink Oracle and contract info for the Ethereum 
 
 For a full walkthrough, see the documentation [here](https://docs.tableland.xyz/tutorials/table-reads-chainlink).
 
-## Project Structure
+### Project Structure
 
 The final output of this project produces the following:
 
@@ -37,9 +48,9 @@ The final output of this project produces the following:
 └── .env
 ```
 
-# Usage
+## Usage
 
-## Setup
+### Setup
 
 Before getting started, be sure to update the values in a `.env` file as well as sign up for an [Alchemy](https://alchemy.com/) and [Etherscan](https://etherscan.io/myapikey) account:
 
@@ -52,15 +63,17 @@ ETHEREUM_SEPOLIA_API_KEY=fixme
 ETHERSCAN_API_KEY=fixme
 ```
 
-## Deployment
+### Deployment
 
-Deploy the contract, where the `url` and `path` are set within the `deploy` script and also avaible as tasks, if needed:
+Deploy the contract, where the `url` and `path` are set within the `deploy` script and also available as tasks, if needed. Make sure that before you deploy the contract, you have [testnet LINK in your wallet](https://faucets.chain.link/sepolia). The deploy script handles a bunch of actions, including funding the contract with LINK, setting the request URL and path, and making a request to the Tableland gateway for the Chainlink Oracle to fulfill.
+
+Run the deploy script with `npm run deploy`, which under the hood runs:
 
 ```
 npx hardhat run scripts/deploy.ts --network sepolia
 ```
 
-Upon deploying, save the value of the contract is `hardhat.configs.ts`, under the `config` variable's `config` key. Below is an example of what this should look like. Keep in mind that each offical Chainlink node should implement data transformation parameters the same across networks (e.g., `req.addInt("times", ...)`).
+Upon deploying, save the value of the contract is `hardhat.configs.ts`, under the `config` field's `contractAddress` key. Below is an example of what this should look like. Keep in mind that each official Chainlink node should implement data transformation parameters the same across networks (e.g., `req.addInt("times", ...)`).
 
 ```javascript
 ...
@@ -75,13 +88,13 @@ config: {
 ...
 ```
 
-Optionally, verify the contract:
+Then, you can (optionally) verify the contract with `npm run verify`, assuming you've set up an Etherscan API key in your `.env` file. Under the hood, this will run:
 
 ```
 npx hardhat run scripts/verify.ts --network sepolia
 ```
 
-## Tasks
+### Tasks
 
 A number of tasks are included. Some simply read onchain data, and others cause state to be overwritten. All tasks can be listed with the command `npx hardhat`.
 
@@ -123,11 +136,16 @@ npx hardhat set-link --address <value> --network sepolia
 
 Withdraw LINK:
 npx hardhat withdraw --network sepolia
+
+Prints an account's balance:
+npx hardhat balance --network sepolia
 ```
 
-# Output
+## Output
 
-The final `TableState` contract will be deployed on Ethereum Sepolia. It makes a request to the Tableland testnets gateway for the data at `healthbot_11155111_1`:
+The final `TableState` contract is deployed on Ethereum Sepolia: [here](https://sepolia.etherscan.io/address/0x22352F3c7765D389f2491108942de357f799Ec4F). You can read the `data` that was written to the contract from the offchain read.
+
+It made a request to the Tableland testnets gateway for the data at `healthbot_11155111_1`:
 
 - Request URL: https://testnets.tableland.network/api/v1/query?unwrap=true&statement=select%20%2A%20from%20healthbot_11155111_1
 - Request path: `"counter"`

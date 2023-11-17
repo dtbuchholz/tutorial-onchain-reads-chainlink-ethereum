@@ -5,9 +5,9 @@ import "@nomicfoundation/hardhat-toolbox";
 task("balance", "Prints an account's balance").setAction(
   async (_, { ethers, deployment }) => {
     const [account] = await ethers.getSigners();
+    const contractAddr = deployment.contractAddress;
     // Log the balance of ETH
-    let balance = await ethers.provider.getBalance(account.address);
-    console.log(ethers.utils.formatEther(balance), "ETH");
+    const ethBalance = await ethers.provider.getBalance(account.address);
     // Log the balance of the LINK token, first connecting to the contract
     const linkContractAddr = deployment.linkTokenAddress;
     const LINK_TOKEN_ABI = [
@@ -46,8 +46,16 @@ task("balance", "Prints an account's balance").setAction(
       LINK_TOKEN_ABI,
       account
     );
-    balance = await linkTokenContract.balanceOf(account.address);
-    console.log(ethers.utils.formatEther(balance), "LINK");
+    let balance = await linkTokenContract.balanceOf(account.address);
+    console.log(
+      "Wallet:",
+      ethers.utils.formatEther(ethBalance).slice(0, 7),
+      "ETH,",
+      ethers.utils.formatEther(balance),
+      "LINK"
+    );
+    balance = await linkTokenContract.balanceOf(contractAddr);
+    console.log("Contract:", ethers.utils.formatEther(balance), "LINK");
   }
 );
 
@@ -105,7 +113,7 @@ task("withdraw", "Withdraws LINK from contract").setAction(
       "TableState",
       account
     );
-    const tableStateContract = await TableStateContract.attach(contractAddr);
+    const tableStateContract = TableStateContract.attach(contractAddr);
     const tx = await tableStateContract.withdrawLink();
     const rec = await tx.wait();
     console.log(

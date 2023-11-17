@@ -17,7 +17,7 @@ task("set-url", "Sets contract request URL")
       "TableState",
       account
     );
-    const tableStateContract = await TableStateContract.attach(contractAddr);
+    const tableStateContract = TableStateContract.attach(contractAddr);
     await tableStateContract
       .setRequestUrl(url)
       .then(function (transaction: any) {
@@ -45,7 +45,7 @@ task("set-path", "Sets contract request path")
       "TableState",
       account
     );
-    const tableStateContract = await TableStateContract.attach(contractAddr);
+    const tableStateContract = TableStateContract.attach(contractAddr);
     await tableStateContract
       .setRequestPath(path)
       .then(function (transaction: any) {
@@ -73,7 +73,7 @@ task("set-fee", "Sets contract fee paid to Chainlink node")
       "TableState",
       account
     );
-    const tableStateContract = await TableStateContract.attach(contractAddr);
+    const tableStateContract = TableStateContract.attach(contractAddr);
     await tableStateContract.setFee(fee).then(function (transaction: any) {
       console.log(
         `Contract '${contractAddr}' fee set successfully called at tx '${transaction.hash}'`
@@ -97,7 +97,7 @@ task("set-link", "Sets Chainlink LINK token address")
       "TableState",
       account
     );
-    const tableStateContract = await TableStateContract.attach(contractAddr);
+    const tableStateContract = TableStateContract.attach(contractAddr);
     await tableStateContract
       .setLinkToken(address)
       .then(function (transaction: any) {

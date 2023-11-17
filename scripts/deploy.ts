@@ -14,11 +14,13 @@ async function main() {
   );
   await tableState.deployed();
   console.log(`Contract 'TableState' deployed to: ${tableState.address}`);
+
   // Define the table in which Chainlink should make an API request to -- e.g., the `healthbot` table
   const { chainId } = await ethers.provider.getNetwork();
   const tableName = `healthbot_${chainId}_1`; // The `healthbot` table is always the first table minted, hence, the `1` suffix
+
   // Define the Tableland gateway URL to make a query at: SELECT * FROM healthbot_{chainId}_1
-  const url = `https://testnets.tableland.network/query?unwrap=true&s=select%20%2A%20from%20${tableName}`;
+  const url = `https://testnets.tableland.network/api/v1/query?unwrap=true&statement=select%20%2A%20from%20${tableName}`;
   // Set the request `url` and `path` variables in the contract
   let tx = await tableState.setRequestUrl(url);
   await tx.wait();
@@ -29,7 +31,7 @@ async function main() {
   console.log(`Path set to: '${path}'`);
 
   // Fund the contract with LINK
-  const linkContractAddr = deployment.linkTokenAddress; // Arbitrum Goerli LINK token address
+  const linkContractAddr = deployment.linkTokenAddress; // Ethereum Sepolia LINK token address
   const contractAddr = tableState.address;
   const networkId = network.name;
   console.log(`Funding contract '${contractAddr}' on network '${networkId}'`);
@@ -54,6 +56,7 @@ async function main() {
     account
   );
   await linkTokenContract
+    .connect(account)
     .transfer(contractAddr, amount)
     .then(function (transaction: any) {
       console.log(

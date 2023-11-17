@@ -7,7 +7,7 @@ import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 contract TableState is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
-    // The off-chain `data` returned by Chainlink from the Tableland network
+    // The offchain `data` returned by Chainlink from the Tableland network
     uint256 public data;
     // URL to make an HTTP request to
     string public url;
@@ -22,12 +22,13 @@ contract TableState is ChainlinkClient, ConfirmedOwner {
     event RequestData(bytes32 indexed requestId, uint256 data);
 
     /**
-     * @dev Initialize the LINK token and target oracle.
+     * @dev Initialize the LINK token and target oracle
      *
-     * Arbitrum Goerli testnet details:
-     * LINK token: 0xd14838A68E8AFBAdE5efb411d5871ea0011AFd28
-     * Oracle: 0x2362A262148518Ce69600Cc5a6032aC8391233f5 (Translucent node operator, defined at: https://translucent.link/products/get-uint256)
-     * jobId: 7599d3c8f31e4ce78ad2b790cbcfc673 (Translucent node operator's defintion)
+     * Ethereum Sepolia Testnet details:
+     * LINK Token: 0x779877A7B0D9E8603169DdbD7836e478b4624789
+     * Oracle: 0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD (Chainlink's Ethereum Sepolia oracle)
+     * _jobId: ca98366cc7314957b8c012c72f05aeeb
+     *
      */
     constructor(
         address link,
@@ -37,7 +38,7 @@ contract TableState is ChainlinkClient, ConfirmedOwner {
         setChainlinkToken(link);
         setChainlinkOracle(oracle);
         _jobId = jobId;
-        _fee = (1 * LINK_DIVISIBILITY) / 10;
+        _fee = (1 * LINK_DIVISIBILITY) / 10; // This is 0.1 LINK, where `LINK_DIVISIBILITY` is 10**18
     }
 
     /**
@@ -55,7 +56,7 @@ contract TableState is ChainlinkClient, ConfirmedOwner {
     }
 
     /**
-     * @dev Set the oracle to make the off-chain request.
+     * @dev Set the oracle to make the offchain request.
      */
     function setOracle(address oracle) external onlyOwner {
         setChainlinkOracle(oracle);
@@ -96,7 +97,7 @@ contract TableState is ChainlinkClient, ConfirmedOwner {
         // Set the path to find the desired data in the API response
         req.add("path", path);
         // Required parameter, set to `1` to denote no multiplication needed in return value
-        req.addInt("multiply", 1); // Or, a node may choose to implement "times" here, which is the Chainlink default
+        req.addInt("times", 1);
         // Sends the request
         requestId = sendChainlinkRequest(req, _fee);
     }

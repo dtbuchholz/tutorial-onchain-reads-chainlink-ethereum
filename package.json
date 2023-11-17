@@ -1,7 +1,9 @@
 {
   "name": "hardhat-project",
   "scripts": {
-    "deploy": "npx hardhat run scripts/deploy.tx --network ethereum-goerli"
+    "build": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.ts --network sepolia",
+    "verify": "npx hardhat run scripts/verify.ts --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
