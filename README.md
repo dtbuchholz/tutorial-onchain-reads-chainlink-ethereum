@@ -1,22 +1,22 @@
 # TableState
 
-On-chain table state using Chainlink's [Any API](https://docs.chain.link/getting-started/advanced-tutorial/) and [Arbitrum](https://developer.offchainlabs.com/getting-started-devs).
+Onchain table state using Chainlink's [Any API](https://docs.chain.link/getting-started/advanced-tutorial/) and Ethereum (Sepolia).
 
 # Background
 
 ## Overview
 
-This project demonstrates how to query off-chain Tableland table state and get data back on-chain. It leverages Chainlink's Oracle network to fulfill on-chain requests at the Tableland gateway and write the data back to the smart contract, allowing for on-chain reads to take place. Arbitrum's Goerli testnet is also used to demonstrate how to use Chainlink in a testnet environment.
+This project demonstrates how to query offchain Tableland table state and get data back onchain. It leverages Chainlink's Oracle network to fulfill onchain requests at the Tableland gateway and write the data back to the smart contract, allowing for onchain reads to take place. Ethereum's Sepolia testnet is also used to demonstrate how to use Chainlink in a testnet environment.
 
-This example hard codes the Chainlink Oracle and contract info for the Arbtrum Goerli network. Note this is a ["single word"](https://docs.chain.link/any-api/get-request/examples/single-word-response/) response of a `uint256`, but others are possible (see [Any API docs](https://docs.chain.link/any-api/introduction)). The Oracle used here is [Translucent](https://translucent.link/products/get-uint256/). This is unique since the the Chainlink documentation [does not list Arbitrum Goerli](https://docs.chain.link/any-api/testnet-oracles/) as a network with Chainlink-moderated contracts, so using this setup allows developers to access potentially new testnet deployment grounds on the Arbitrum Goerli network.
+This example hard codes the Chainlink Oracle and contract info for the Ethereum Sepolia network. Note this is a ["single word"](https://docs.chain.link/any-api/get-request/examples/single-word-response/) response of a `uint256`, but others are possible (see [Any API docs](https://docs.chain.link/any-api/introduction)). The [Oracle](https://docs.chain.link/any-api/testnet-oracles/) used here is also for Ethereum Sepolia.
 
-For a full walkthrough, see the documentation [here](https://docs.tableland.xyz/on-chain-reads-with-chainlink-arbitrum).
+For a full walkthrough, see the documentation [here](https://docs.tableland.xyz/tutorials/table-reads-chainlink).
 
 ## Project Structure
 
 The final output of this project produces the following:
 
-- `tasks` => Holds a number of useful tasks, including requesting and reading off-chain table data.
+- `tasks` => Holds a number of useful tasks, including requesting and reading offchain table data.
 - `scripts` => Deploy and/or verify the `TableState` contract.
 
 ```markdown
@@ -41,15 +41,15 @@ The final output of this project produces the following:
 
 ## Setup
 
-Before getting started, be sure to update the values in a `.env` file as well as sign up for an [Alchemy](https://alchemy.com/) and [Arbiscan](https://arbiscan.io/myapikey) account:
+Before getting started, be sure to update the values in a `.env` file as well as sign up for an [Alchemy](https://alchemy.com/) and [Etherscan](https://etherscan.io/myapikey) account:
 
 ```
 # Account private key
-ABRITRUM_GOERLI_PRIVATE_KEY=fixme
+ETHEREUM_SEPOLIA_PRIVATE_KEY=fixme
 # Alchemy API key
-ABRITRUM_GOERLI_API_KEY=fixme
-# Arbiscan API key (contract verification)
-ABRISCAN_API_KEY=fixme
+ETHEREUM_SEPOLIA_API_KEY=fixme
+# Etherscan API key (contract verification)
+ETHERSCAN_API_KEY=fixme
 ```
 
 ## Deployment
@@ -57,19 +57,19 @@ ABRISCAN_API_KEY=fixme
 Deploy the contract, where the `url` and `path` are set within the `deploy` script and also avaible as tasks, if needed:
 
 ```
-npx hardhat run scripts/deploy.ts --network arbitrum-goerli
+npx hardhat run scripts/deploy.ts --network sepolia
 ```
 
-Upon deploying, save the value of the contract is `hardhat.configs.ts`, under the `config` variable's `config` key. Below is an example of what this should look like. The reference to Translucent is the node operator; Chainlink also has a series of hosted nodes that can be used for testing purposes (expect, they don't have an Aribtrum Goerli option). Keep in mind that each node may implement data transformation parameters slightly differently (e.g., `req.addInt("multiply", ...)` vs. `req.addInt("times", ...)`).
+Upon deploying, save the value of the contract is `hardhat.configs.ts`, under the `config` variable's `config` key. Below is an example of what this should look like. Keep in mind that each offical Chainlink node should implement data transformation parameters the same across networks (e.g., `req.addInt("times", ...)`).
 
 ```javascript
 ...
 config: {
   args: {
-    contractAddress: "0x383f1BAA132Cea7CFfb2780f2935deD0f8e7E654#code", // IMPORTANT: Update with deployed contract
-    linkTokenAddress: "0xd14838A68E8AFBAdE5efb411d5871ea0011AFd28", // Arbitrum Goerli LINK token
-    oracleAddress: "0x2362A262148518Ce69600Cc5a6032aC8391233f5", // Translucent (node operator) address
-    jobId: "7599d3c8f31e4ce78ad2b790cbcfc673" // Translucent job ID for single word uint256 request
+    contractAddress: "", // IMPORTANT: Update with deployed contract
+    linkTokenAddress: "0x779877A7B0D9E8603169DdbD7836e478b4624789", // Ethereum Sepolia LINK token
+    oracleAddress: "0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD", // Any API node operator address
+    jobId: "ca98366cc7314957b8c012c72f05aeeb" // Job ID for single word uint256 request
   }
 }
 ...
@@ -78,67 +78,63 @@ config: {
 Optionally, verify the contract:
 
 ```
-npx hardhat run scripts/verify.ts --network arbitrum-goerli
+npx hardhat run scripts/verify.ts --network sepolia
 ```
 
 ## Tasks
 
-A number of tasks are included. Some simply read on-chain data, and others cause state to be overwritten. All tasks can be listed with the command `npx hardhat`.
+A number of tasks are included. Some simply read onchain data, and others cause state to be overwritten. All tasks can be listed with the command `npx hardhat`.
 
 Make a request to the Tableland gateway for the Chainlink Oracle to fulfill:
 
 ```
-npx hardhat request-data --network arbitrum-goerli
+npx hardhat request-data --network sepolia
 ```
 
-Read the associated response that's written back on-chain:
+Read the associated response that's written back onchain:
 
 ```
-npx hardhat read-data --network arbitrum-goerli
+npx hardhat read-data --network sepolia
 ```
 
 Try running some of the other tasks:
 
 ```
 Fund the contract with 1 LINK:
-npx hardhat fund-link --network arbitrum-goerli
+npx hardhat fund-link --network sepolia
 
 Set the request URL:
-npx hardhat set-url --url <value> --network arbitrum-goerli
+npx hardhat set-url --url <value> --network sepolia
 
 Get the request URL:
-npx hardhat read-url --network arbitrum-goerli
+npx hardhat read-url --network sepolia
 
 Set the request path:
-npx hardhat set-path --path <value> --network arbitrum-goerli
+npx hardhat set-path --path <value> --network sepolia
 
 Get the request path:
-npx hardhat read-path --network arbitrum-goerli
+npx hardhat read-path --network sepolia
 
 Set the LINK default fee amount:
-npx hardhat set-fee --fee <value> --network arbitrum-goerli
+npx hardhat set-fee --fee <value> --network sepolia
 
 Set the LINK token address:
-npx hardhat set-link --address <value> --network arbitrum-goerli
+npx hardhat set-link --address <value> --network sepolia
 
 Withdraw LINK:
-npx hardhat withdraw --network arbitrum-goerli
+npx hardhat withdraw --network sepolia
 ```
 
 # Output
 
-The following `TableState` contract was deployed on Arbitrum Goerli:
+The final `TableState` contract will be deployed on Ethereum Sepolia. It makes a request to the Tableland testnets gateway for the data at `healthbot_11155111_1`:
 
-- Contract: [0x383f1BAA132Cea7CFfb2780f2935deD0f8e7E654](https://goerli.arbiscan.io/address/0x383f1BAA132Cea7CFfb2780f2935deD0f8e7E654)
-
-It makes a request to the Tableland testnets gateway for the data at `healthbot_421613_1`:
-
-- Request URL: https://testnets.tableland.network/query?unwrap=true&s=select%20%2A%20from%20healthbot_421613_1
+- Request URL: https://testnets.tableland.network/api/v1/query?unwrap=true&statement=select%20%2A%20from%20healthbot_11155111_1
 - Request path: `"counter"`
 - Example response:
 
 ```json
 {
-  "counter": 68974
+  "counter": 4994
 }
 ```
